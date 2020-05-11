@@ -1,24 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useCallback, useEffect, useState } from 'react';
+
+import RecordForm from './components/RecordForm';
+import TravelLog from './components/TravelLog';
+import styles from './App.module.css';
+import { travelLogService } from './services/travelLog';
 
 function App() {
+  const [travelLog, setTravelLog] = useState([]);
+
+  const handleAddRecord = useCallback(
+    (type) => (record) => {
+      travelLog.push({ ...record, type });
+      setTravelLog(travelLog);
+    },
+    [travelLog]
+  );
+
+  const printLogToConsole = useCallback(() => {
+    console.log(travelLog);
+  }, [travelLog]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const data = await travelLogService.getTravelLog();
+      setTravelLog(data);
+    };
+
+    fetch();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className={styles.app}>
+      <div className={styles.form}>
+        <span>Check In</span>
+        <RecordForm
+          onSubmit={handleAddRecord('check-in')}
+          btnTitle="check in"
+        />
+      </div>
+
+      <div className={styles.form} style={{ marginTop: 16 }}>
+        <span>Check Out</span>
+        <RecordForm
+          onSubmit={handleAddRecord('check-out')}
+          btnTitle="check out"
+        />
+      </div>
+
+      <div style={{ marginTop: 24 }}>
+        <TravelLog data={travelLog} />
+      </div>
+      <button onClick={printLogToConsole()} style={{ marginTop: 8 }}>
+        print log to console
+      </button>
     </div>
   );
 }

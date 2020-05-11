@@ -1,0 +1,9 @@
+.app {
+  padding: 16px;
+}
+
+.form {
+  width: 500px;
+  display: flex;
+  flex-direction: column;
+}

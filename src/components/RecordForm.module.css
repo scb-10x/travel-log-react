@@ -1,0 +1,9 @@
+.formInput {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.input {
+  border: 1px solid lightgrey;
+}
